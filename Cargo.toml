@@ -5,8 +5,8 @@ authors = ["Ivan Tham <pickfire@riseup.net>"]
 edition = "2018"
 
 [dependencies]
-x11rb = { version = "0.6", features = ["all-extensions"] }
+x11rb = { version = "0.7", features = ["all-extensions"] }
 libc = "0.2"
 signal-hook = "0.1.16"
 anyhow = "1.0.31"
-nix = "0.17.0"
+nix = "0.18.0"

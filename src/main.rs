@@ -3,7 +3,8 @@ use std::ffi::CString;
 use std::{process, ptr};
 use x11rb::connection::Connection;
 use x11rb::errors::ReplyError;
-use x11rb::protocol::{xproto::*, Error};
+use x11rb::protocol::{xproto::*, ErrorKind};
+use x11rb::x11_utils::X11Error;
 use x11rb::COPY_DEPTH_FROM_PARENT;
 
 fn check_other_wm<C: Connection>(conn: &C, screen: &Screen) -> Result<(), ReplyError> {
@@ -11,7 +12,7 @@ fn check_other_wm<C: Connection>(conn: &C, screen: &Screen) -> Result<(), ReplyE
         EventMask::SubstructureRedirect | EventMask::SubstructureNotify | EventMask::EnterWindow,
     );
     let res = conn.change_window_attributes(screen.root, &values)?.check();
-    if let Err(ReplyError::X11Error(Error::Access(_))) = res {
+    if matches!(res, Err(ReplyError::X11Error(X11Error { error_kind: ErrorKind::Access, .. }))) {
         eprintln!("another window manager is already running");
         process::exit(1);
     }
